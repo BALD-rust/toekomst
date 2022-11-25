@@ -13,6 +13,12 @@ impl<T: Send> Notify<T> {
         Self(Signal::new())
     }
 
+    pub fn new_preoccupied(v: T) -> Self {
+        let s = Self::new();
+        s.notify(v);
+        s
+    }
+
     pub async fn wait(&self) -> T {
         let t = self.0.wait().await;
         self.0.reset();
@@ -62,13 +68,7 @@ impl<T: Send> Notify<T> {
         }
     }
 
-    pub fn notify_with(&self, val: T) {
+    pub fn notify(&self, val: T) {
         self.0.signal(val)
-    }
-}
-
-impl Notify<()> {
-    pub fn notify(&self) {
-        self.notify_with(())
     }
 }
