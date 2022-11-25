@@ -22,7 +22,7 @@ async fn ui() {
 
     let _ = select(
         btn.render(),
-        n.once(async {
+        n.once(|_| async {
             log::info!("Button pressed!");
         }),
     )

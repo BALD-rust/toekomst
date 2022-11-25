@@ -1,33 +1,34 @@
-use core::future::{Future, IntoFuture};
+use core::future::IntoFuture;
 
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::signal::Signal;
 
-pub struct Notify(Signal<ThreadModeRawMutex, ()>);
+pub struct Notify<T = ()>(Signal<ThreadModeRawMutex, T>);
 
-/// Synchronization primitive for communication between futures,
-/// where no meaningful data has to be transferred.
+/// Synchronization primitive for communication between futures.
 ///
 /// Used to wake up other futures as a replacement for callbacks in traditional UI libraries.
-impl Notify {
+impl<T: Send> Notify<T> {
     pub fn new() -> Self {
         Self(Signal::new())
     }
 
-    pub async fn wait(&self) {
-        let () = self.0.wait().await;
+    pub async fn wait(&self) -> T {
+        let t = self.0.wait().await;
         self.0.reset();
+        t
     }
 
     /// Handle a single notification from this [Notify].
     ///
     /// If you need to handle notifications in a loop, consider using [Notify::on].
-    pub async fn once<C>(&self, on_notify: C) -> C::Output
+    pub async fn once<C, F>(&self, on_notify: C) -> F::Output
     where
-        C: IntoFuture,
+        F: IntoFuture,
+        C: FnOnce(T) -> F,
     {
-        self.wait().await;
-        on_notify.await
+        let t = self.wait().await;
+        on_notify(t).await
     }
 
     /// Create a handler for this [Notify].
@@ -47,7 +48,7 @@ impl Notify {
     /// ```
     pub async fn on<C, F, R>(&self, handler: C) -> !
     where
-        F: Future<Output = R>,
+        F: IntoFuture<Output = R>,
         C: (Fn() -> F) + Clone,
     {
         loop {
@@ -61,7 +62,13 @@ impl Notify {
         }
     }
 
+    pub fn notify_with(&self, val: T) {
+        self.0.signal(val)
+    }
+}
+
+impl Notify<()> {
     pub fn notify(&self) {
-        self.0.signal(())
+        self.notify_with(())
     }
 }
