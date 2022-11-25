@@ -1,7 +1,9 @@
-use crate::display::disp;
+use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::pixelcolor::BinaryColor::Off;
 use embedded_graphics::prelude::*;
 use embedded_graphics::primitives::{PrimitiveStyle, Rectangle, StyledDrawable};
+
+use crate::display::disp;
 
 pub trait Widget {
     type Output;
@@ -31,7 +33,15 @@ impl Space {
     }
 }
 
+#[inline]
 pub async fn clean_space(space: Space) {
-    let _ = Rectangle::new(space.position, space.size)
-        .draw_styled(&PrimitiveStyle::with_fill(Off), &mut *disp().await);
+    clean_space_on(space, &mut *disp().await)
+}
+
+pub fn clean_space_on<D>(space: Space, dt: &mut D)
+where
+    D: DrawTarget<Color = BinaryColor>,
+{
+    let _ =
+        Rectangle::new(space.position, space.size).draw_styled(&PrimitiveStyle::with_fill(Off), dt);
 }

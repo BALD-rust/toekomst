@@ -1,13 +1,14 @@
 use core::future::poll_fn;
 use core::task::Poll;
 
-use embedded_graphics::prelude::{Point, Size};
+use embedded_graphics::pixelcolor::BinaryColor;
+use embedded_graphics::prelude::{DrawTarget, Point, Size};
 use embedded_graphics::text::Text;
 use embedded_graphics::Drawable;
 
 use crate::display::disp;
 use crate::notify::Notify;
-use crate::widget::{clean_space, Space};
+use crate::widget::{clean_space_on, Space};
 use crate::{text, FONT};
 
 pub async fn label(s: &str, p: Point) -> ! {
@@ -32,10 +33,11 @@ pub async fn label_with<S: AsRef<str> + Send>(notif: &Notify<S>, p: Point) -> ! 
 
     loop {
         let s = notif.wait().await;
-        log::trace!("draw text");
         let s = s.as_ref();
 
-        clean_space(space).await;
+        let dt = &mut *disp().await;
+
+        clean_space_on(space, dt);
         space = Space::new(
             p,
             Size::new(
@@ -43,16 +45,24 @@ pub async fn label_with<S: AsRef<str> + Send>(notif: &Notify<S>, p: Point) -> ! 
                 SIZE.height,
             ),
         );
-
-        label_once(s, p).await;
+        label_once_on(s, p, dt);
     }
 }
 
+#[inline]
 pub async fn label_once<S: AsRef<str>>(s: S, p: Point) {
+    label_once_on(s, p, &mut *disp().await)
+}
+
+pub fn label_once_on<S, D>(s: S, p: Point, dt: &mut D)
+where
+    S: AsRef<str>,
+    D: DrawTarget<Color = BinaryColor>,
+{
     let _ = Text::new(
         s.as_ref(),
         p + Point::new(0, FONT.baseline as i32),
         text(FONT),
     )
-    .draw(&mut *disp().await);
+    .draw(dt);
 }

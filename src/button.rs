@@ -1,14 +1,13 @@
-use crate::display::disp;
-use crate::{text, text_inverted, thin_line, FONT, SMALL_FONT};
-use embassy_futures::yield_now;
 use embedded_graphics::prelude::{Point, Size};
 use embedded_graphics::primitives::{Rectangle, StyledDrawable};
 use embedded_graphics::text::Text;
 use embedded_graphics::Drawable;
 
+use crate::display::disp;
 use crate::key::{wait, Accel, Key};
 use crate::notify::Notify;
 use crate::widget::{Space, Widget};
+use crate::{text, text_inverted, thin_line, FONT, SMALL_FONT};
 
 const SPACING: u32 = 3;
 
@@ -29,10 +28,10 @@ impl<'s, 'n, T: Send + Clone> Widget for Button<'s, 'n, T> {
 
     async fn render(&self) {
         {
-            let disp = &mut *disp().await;
+            let dt = &mut *disp().await;
             // Draw bounding rect
-            let _ = Rectangle::new(self.space.position, self.space.size)
-                .draw_styled(&thin_line(), disp);
+            let _ =
+                Rectangle::new(self.space.position, self.space.size).draw_styled(&thin_line(), dt);
 
             // Draw accelerator
             let _ = Text::new(
@@ -40,7 +39,7 @@ impl<'s, 'n, T: Send + Clone> Widget for Button<'s, 'n, T> {
                 self.space.position + Point::new(1, SMALL_FONT.baseline as i32 + 1),
                 text_inverted(SMALL_FONT),
             )
-            .draw(disp);
+            .draw(dt);
 
             // Draw button label
             let _ = Text::new(
@@ -52,7 +51,7 @@ impl<'s, 'n, T: Send + Clone> Widget for Button<'s, 'n, T> {
                     ),
                 text(FONT),
             )
-            .draw(disp);
+            .draw(dt);
         }
 
         loop {
@@ -61,7 +60,6 @@ impl<'s, 'n, T: Send + Clone> Widget for Button<'s, 'n, T> {
             log::trace!("button pressed");
 
             self.notif.notify(self.value.clone());
-            yield_now().await;
         }
     }
 }

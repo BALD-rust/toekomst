@@ -2,16 +2,20 @@
 #![feature(async_closure)]
 #![feature(future_join)]
 
+use std::future::poll_fn;
+use std::task::Poll;
+
 use embassy_executor::Spawner;
 use embassy_futures::select::select;
 use embedded_graphics::prelude::*;
 use embedded_graphics_simulator::SimulatorDisplay;
 
 use auwaa::button::Button;
+use auwaa::display::disp;
 use auwaa::key::Accel;
 use auwaa::notify::Notify;
-use auwaa::text::label;
-use auwaa::widget::{clean_space, Widget};
+use auwaa::text::label_once_on;
+use auwaa::widget::{clean_space_on, Widget};
 
 async fn ui() {
     let a = Accel::new();
@@ -27,8 +31,13 @@ async fn ui() {
     )
     .await;
 
-    clean_space(btn.space()).await;
-    label("Button pressed!", btn.position()).await;
+    {
+        let dt = &mut *disp().await;
+        clean_space_on(btn.space(), dt);
+        label_once_on("Button pressed!", btn.position(), dt);
+    }
+
+    poll_fn(|_| Poll::Pending).await
 }
 
 #[embassy_executor::main]
