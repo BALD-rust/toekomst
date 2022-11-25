@@ -1,0 +1,23 @@
+[package]
+name = "auwaa"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+embassy-executor = { git = "https://github.com/embassy-rs/embassy/", features = ["std", "nightly", "integrated-timers", "log"] }
+embassy-time = { git = "https://github.com/embassy-rs/embassy/", features = ["std", "nightly"] }
+embassy-sync = { git = "https://github.com/embassy-rs/embassy/", features = ["std", "nightly"] }
+embassy-futures = { git = "https://github.com/embassy-rs/embassy/" }
+embedded-graphics = "0.7.1"
+log = "0.4.17"
+pretty_env_logger = "0.4.0"
+strum_macros = "0.24.3"
+
+embedded-graphics-simulator = { version = "0.4.0", optional = true }
+sharp-memory-display = { version = "0.3.0", optional = true }
+
+[features]
+simulator = ["dep:embedded-graphics-simulator"]
+sharp = ["dep:sharp-memory-display"]
