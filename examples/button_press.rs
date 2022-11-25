@@ -17,8 +17,7 @@ async fn ui() {
     let a = Accel::new();
 
     let n = Notify::new();
-    let c = Point::new(10, 10);
-    let (_, btn) = Button::new(a, c, "Btn", &n);
+    let (btn, _a) = Button::new(a, Point::new(10, 10), "Btn", &n, ());
 
     let _ = select(
         btn.render(),
@@ -34,7 +33,7 @@ async fn ui() {
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
-    pretty_env_logger::init();
+    env_logger::init();
     auwaa::display::init_disp(SimulatorDisplay::new(Size::new(400, 240)));
 
     select(auwaa::display::run_disp(), ui()).await;
