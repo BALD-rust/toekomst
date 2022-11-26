@@ -1,7 +1,5 @@
 #![feature(type_alias_impl_trait)]
 #![feature(async_closure)]
-#![feature(future_join)]
-#![feature(cell_update)]
 
 use embassy_executor::Spawner;
 use embassy_futures::join::join4;

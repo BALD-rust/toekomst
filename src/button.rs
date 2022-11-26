@@ -55,9 +55,7 @@ impl<'s, 'n, T: Send + Clone> Widget for Button<'s, 'n, T> {
         }
 
         loop {
-            log::trace!("wait key");
             wait(self.key).await;
-            log::trace!("button pressed");
 
             self.notif.notify(self.value.clone());
         }

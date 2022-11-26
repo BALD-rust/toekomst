@@ -1,7 +1,6 @@
 #![feature(inline_const)]
 #![feature(variant_count)]
 #![feature(async_fn_in_trait)]
-#![feature(future_join)]
 #![allow(incomplete_features)]
 #![no_std]
 

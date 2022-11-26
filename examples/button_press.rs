@@ -1,6 +1,5 @@
 #![feature(type_alias_impl_trait)]
 #![feature(async_closure)]
-#![feature(future_join)]
 
 use std::future::poll_fn;
 use std::task::Poll;

@@ -1,7 +1,6 @@
 use core::future::Future;
 use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
 use embassy_sync::signal::Signal;
-use log::info;
 use strum_macros::IntoStaticStr;
 
 const KEY_LEN: usize = core::mem::variant_count::<Key>();
@@ -19,8 +18,6 @@ pub fn wait(k: Key) -> impl Future<Output = ()> + 'static {
 }
 
 pub fn press_key(k: Key) {
-    info!("Press {k:?}");
-
     unsafe { get_sig(k) }.signal(())
 }
 
