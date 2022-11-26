@@ -1,6 +1,5 @@
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::mutex::{Mutex, MutexGuard};
-use embassy_time::{Duration, Timer};
 use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics_simulator::sdl2::Keycode;
 use embedded_graphics_simulator::{
@@ -8,6 +7,7 @@ use embedded_graphics_simulator::{
 };
 
 use core::mem::MaybeUninit;
+use embassy_futures::yield_now;
 
 use crate::key::Key;
 
@@ -57,6 +57,6 @@ pub async fn run_disp() {
             }
         }
 
-        Timer::after(Duration::from_millis(20)).await;
+        yield_now().await;
     }
 }

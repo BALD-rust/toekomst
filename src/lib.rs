@@ -19,6 +19,7 @@ pub mod key;
 pub mod notify;
 pub mod text;
 pub mod widget;
+pub mod layout;
 
 mod backend;
 

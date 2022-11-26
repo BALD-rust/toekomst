@@ -11,12 +11,14 @@ use embedded_graphics_simulator::SimulatorDisplay;
 
 use auwaa::button::Button;
 use auwaa::key::Accel;
+use auwaa::layout::Vertical;
 use auwaa::notify::Notify;
 use auwaa::text::label_with;
 use auwaa::widget::Widget;
 
 async fn ui() {
     let a = Accel::new();
+    let mut v = Vertical::new(Point::new(10, 10), 10);
 
     #[derive(Clone, Debug)]
     enum Cmd {
@@ -27,14 +29,9 @@ async fn ui() {
     let cmd_notif = Notify::new();
     let text_notif = Notify::new_preoccupied("Count: 0".to_string());
 
-    let pls_pos = Point::new(10, 10);
-    let (btn_plus, a) = Button::new(a, pls_pos, "Add 1", &cmd_notif, Cmd::Plus);
-
-    let min_pos = pls_pos + btn_plus.size().x_axis() + Point::new(10, 0);
-    let (btn_min, _a) = Button::new(a, min_pos, "Subtract 1", &cmd_notif, Cmd::Min);
-
-    let lbl_pos = btn_plus.position() + btn_plus.size().y_axis();
-    let count_label = label_with(&text_notif, lbl_pos + Point::new(0, 10));
+    let (btn_plus, a) = Button::new(a, v.current(), "Add 1", &cmd_notif, Cmd::Plus);
+    let (btn_min, _a) = Button::new(a, v.push(btn_plus.size()), "Subtract 1", &cmd_notif, Cmd::Min);
+    let count_label = label_with(&text_notif, v.push(btn_min.size()));
 
     let cmd_fut = async {
         let mut count = 0;
