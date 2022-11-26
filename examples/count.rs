@@ -7,12 +7,12 @@ use embassy_futures::select::select;
 use embedded_graphics::prelude::*;
 use embedded_graphics_simulator::SimulatorDisplay;
 
-use auwaa::button::Button;
-use auwaa::key::Accel;
-use auwaa::layout::Vertical;
-use auwaa::notify::Notify;
-use auwaa::text::label_with;
-use auwaa::widget::Widget;
+use toekomst::button::Button;
+use toekomst::key::Accel;
+use toekomst::layout::Vertical;
+use toekomst::notify::Notify;
+use toekomst::text::label_with;
+use toekomst::widget::Widget;
 
 async fn ui() {
     let a = Accel::new();
@@ -53,9 +53,9 @@ async fn main(_spawner: Spawner) {
         .format_timestamp_millis()
         .init();
 
-    auwaa::display::init_disp(SimulatorDisplay::new(Size::new(400, 240)));
+    toekomst::display::init_disp(SimulatorDisplay::new(Size::new(400, 240)));
 
-    select(auwaa::display::run_disp(), ui()).await;
+    select(toekomst::display::run_disp(), ui()).await;
 
     std::process::exit(0);
 }

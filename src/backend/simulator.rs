@@ -32,7 +32,7 @@ pub async fn run_disp() {
         .scale(2)
         .build();
 
-    let mut window = Window::new("auwaa", &settings);
+    let mut window = Window::new("toekomst", &settings);
 
     'inf: loop {
         window.update(&*disp().await);
