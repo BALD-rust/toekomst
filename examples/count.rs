@@ -11,7 +11,7 @@ use toekomst::button::Button;
 use toekomst::key::Accel;
 use toekomst::layout::Vertical;
 use toekomst::notify::Notify;
-use toekomst::text::label_with;
+use toekomst::label::label_with;
 use toekomst::widget::Widget;
 
 async fn ui() {

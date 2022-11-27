@@ -13,7 +13,7 @@ use toekomst::button::Button;
 use toekomst::display::disp;
 use toekomst::key::Accel;
 use toekomst::notify::Notify;
-use toekomst::text::label_once_on;
+use toekomst::label::label_once_on;
 use toekomst::widget::{clean_space_on, Widget};
 
 async fn ui() {

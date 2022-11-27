@@ -19,7 +19,7 @@ pub use backend::mock as display;
 pub mod button;
 pub mod key;
 pub mod notify;
-pub mod text;
+pub mod label;
 pub mod widget;
 pub mod layout;
 
