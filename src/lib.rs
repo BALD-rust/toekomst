@@ -1,6 +1,7 @@
 #![feature(inline_const)]
 #![feature(variant_count)]
 #![feature(async_fn_in_trait)]
+#![feature(once_cell)]
 #![allow(incomplete_features)]
 #![no_std]
 
@@ -12,6 +13,8 @@ use embedded_graphics::primitives::PrimitiveStyle;
 
 #[cfg(feature = "simulator")]
 pub use backend::simulator as display;
+#[cfg(not(any(feature = "simulator", feature = "sharp")))]
+pub use backend::mock as display;
 
 pub mod button;
 pub mod key;
@@ -21,11 +24,6 @@ pub mod widget;
 pub mod layout;
 
 mod backend;
-
-#[cfg(not(any(feature = "simulator", feature = "sharp")))]
-compile_error!(
-    "You must select either the `simulator` or `sharp` feature in order to compile this crate"
-);
 
 // TODO
 #[cfg(feature = "sharp")]

@@ -8,6 +8,7 @@ use embedded_graphics_simulator::{
 
 use core::mem::MaybeUninit;
 use embassy_futures::yield_now;
+use embedded_graphics::prelude::Size;
 
 use crate::key::Key;
 
@@ -19,9 +20,9 @@ pub async fn disp() -> MutexGuard<'static, ThreadModeRawMutex, SimulatorDisplay<
     unsafe { DISP.assume_init_ref() }.lock().await
 }
 
-pub fn init_disp(display: SimulatorDisplay<BinaryColor>) {
+pub fn init_disp(size: Size) {
     unsafe {
-        DISP.write(Mutex::new(display));
+        DISP.write(Mutex::new(SimulatorDisplay::new(size)));
     }
 }
 

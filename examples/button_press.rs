@@ -7,7 +7,7 @@ use std::task::Poll;
 use embassy_executor::Spawner;
 use embassy_futures::select::select;
 use embedded_graphics::prelude::*;
-use embedded_graphics_simulator::SimulatorDisplay;
+use env_logger::Env;
 
 use toekomst::button::Button;
 use toekomst::display::disp;
@@ -41,8 +41,14 @@ async fn ui() {
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
-    env_logger::init();
-    toekomst::display::init_disp(SimulatorDisplay::new(Size::new(400, 240)));
+    let env = Env::default()
+        .filter_or("RUST_LOG", "info");
+
+    env_logger::Builder::from_env(env)
+        .format_timestamp_millis()
+        .init();
+
+    toekomst::display::init_disp(Size::new(400, 240));
 
     select(toekomst::display::run_disp(), ui()).await;
 
