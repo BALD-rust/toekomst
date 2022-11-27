@@ -9,13 +9,13 @@ use env_logger::Env;
 
 use toekomst::button::Button;
 use toekomst::key::Accel;
+use toekomst::label::label_with;
 use toekomst::layout::Vertical;
 use toekomst::notify::Notify;
-use toekomst::label::label_with;
 use toekomst::widget::Widget;
 
 async fn ui() {
-    let a = Accel::new();
+    let ac = Accel::new();
     let mut v = Vertical::new(Point::new(10, 10), 10);
 
     #[derive(Clone, Debug)]
@@ -27,8 +27,14 @@ async fn ui() {
     let cmd_notif = Notify::new();
     let text_notif = Notify::new_preoccupied("Count: 0".to_string());
 
-    let (btn_plus, a) = Button::new(a, v.current(), "Add 1", &cmd_notif, Cmd::Plus);
-    let (btn_min, _a) = Button::new(a, v.push(btn_plus.size()), "Subtract 1", &cmd_notif, Cmd::Min);
+    let (btn_plus, ac) = Button::new(ac, v.current(), "Add 1", &cmd_notif, Cmd::Plus);
+    let (btn_min, _ac) = Button::new(
+        ac,
+        v.push(btn_plus.size()),
+        "Subtract 1",
+        &cmd_notif,
+        Cmd::Min,
+    );
     let count_label = label_with(&text_notif, v.push(btn_min.size()));
 
     let cmd_fut = async {
@@ -49,8 +55,7 @@ async fn ui() {
 
 #[embassy_executor::main]
 async fn main(_spawner: Spawner) {
-    let env = Env::default()
-        .filter_or("RUST_LOG", "info");
+    let env = Env::default().filter_or("RUST_LOG", "info");
 
     env_logger::Builder::from_env(env)
         .format_timestamp_millis()

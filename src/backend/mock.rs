@@ -9,11 +9,12 @@ use embedded_graphics::geometry::Size;
 use embedded_graphics::mock_display::MockDisplay;
 use embedded_graphics::pixelcolor::BinaryColor;
 
-static mut DISP: LazyCell<Mutex<ThreadModeRawMutex, MockDisplay<BinaryColor>>> = LazyCell::new(|| {
-    let mut display = MockDisplay::new();
-    display.set_allow_out_of_bounds_drawing(true);
-    Mutex::new(display)
-});
+static mut DISP: LazyCell<Mutex<ThreadModeRawMutex, MockDisplay<BinaryColor>>> =
+    LazyCell::new(|| {
+        let mut display = MockDisplay::new();
+        display.set_allow_out_of_bounds_drawing(true);
+        Mutex::new(display)
+    });
 
 pub async fn disp() -> MutexGuard<'static, ThreadModeRawMutex, MockDisplay<BinaryColor>> {
     unsafe { DISP.borrow_mut() }.lock().await

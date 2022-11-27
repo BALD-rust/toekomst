@@ -7,7 +7,8 @@ use crate::display::disp;
 use crate::key::{wait, Accel, Key};
 use crate::notify::Notify;
 use crate::widget::{Space, Widget};
-use crate::{text, text_inverted, thin_line, FONT, SMALL_FONT};
+use crate::{text, text_inverted, thin_line};
+pub use crate::{FONT, SMALL_FONT};
 
 const SPACING: u32 = 3;
 

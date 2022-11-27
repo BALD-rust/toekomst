@@ -8,8 +8,9 @@ use embedded_graphics::Drawable;
 
 use crate::display::disp;
 use crate::notify::Notify;
+use crate::text;
 use crate::widget::{clean_space_on, Space};
-use crate::{text, FONT};
+pub use crate::FONT;
 
 pub async fn label(s: &str, p: Point) -> ! {
     label_once(s, p).await;

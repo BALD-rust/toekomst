@@ -11,17 +11,18 @@ use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::pixelcolor::BinaryColor::{Off, On};
 use embedded_graphics::primitives::PrimitiveStyle;
 
-#[cfg(feature = "simulator")]
-pub use backend::simulator as display;
 #[cfg(not(any(feature = "simulator", feature = "sharp")))]
 pub use backend::mock as display;
+#[cfg(feature = "simulator")]
+pub use backend::simulator as display;
 
 pub mod button;
+pub mod input;
 pub mod key;
-pub mod notify;
 pub mod label;
-pub mod widget;
 pub mod layout;
+pub mod notify;
+pub mod widget;
 
 mod backend;
 
