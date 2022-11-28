@@ -39,6 +39,12 @@ impl Accel {
     }
 }
 
+impl From<Key> for Accel {
+    fn from(value: Key) -> Self {
+        Self(value)
+    }
+}
+
 #[derive(Copy, Clone, Debug, IntoStaticStr)]
 #[repr(u8)]
 #[allow(non_camel_case_types)]
