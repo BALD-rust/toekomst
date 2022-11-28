@@ -3,7 +3,7 @@
 #![feature(async_fn_in_trait)]
 #![feature(once_cell)]
 #![allow(incomplete_features)]
-#![no_std]
+#![cfg_attr(not(feature = "simulator"), no_std)]
 
 use embedded_graphics::mono_font::iso_8859_1::{FONT_5X7, FONT_6X12};
 use embedded_graphics::mono_font::{MonoFont, MonoTextStyle, MonoTextStyleBuilder};
