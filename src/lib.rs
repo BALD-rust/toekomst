@@ -17,7 +17,6 @@ pub use backend::mock as display;
 pub use backend::simulator as display;
 
 pub mod button;
-pub mod input;
 pub mod key;
 pub mod label;
 pub mod layout;
