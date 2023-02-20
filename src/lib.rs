@@ -15,6 +15,9 @@ use embedded_graphics::primitives::PrimitiveStyle;
 pub use backend::mock as display;
 #[cfg(feature = "simulator")]
 pub use backend::simulator as display;
+#[cfg(feature = "sharp")]
+pub use backend::sharp as display;
+use crate::display::{OFF, ON};
 
 pub mod button;
 pub mod key;
@@ -25,29 +28,23 @@ pub mod widget;
 
 mod backend;
 
-// TODO
-#[cfg(feature = "sharp")]
-compile_error!("sharp isn't implemented yet");
-
 pub const SMALL_FONT: &MonoFont = &FONT_5X7;
 pub const FONT: &MonoFont = &FONT_6X12;
 
 pub fn thin_line() -> PrimitiveStyle<BinaryColor> {
-    PrimitiveStyle::with_stroke(On, 1)
+    PrimitiveStyle::with_stroke(ON, 1)
 }
 
-pub fn thin_line_off() -> PrimitiveStyle<BinaryColor> {
-    PrimitiveStyle::with_stroke(Off, 1)
-}
+pub fn thin_line_off() -> PrimitiveStyle<BinaryColor> { PrimitiveStyle::with_stroke(OFF, 1) }
 
 pub fn text<'a>(font: &'a MonoFont<'a>) -> MonoTextStyle<'a, BinaryColor> {
-    MonoTextStyle::new(font, On)
+    MonoTextStyle::new(font, ON)
 }
 
 pub fn text_inverted<'a>(font: &'a MonoFont<'a>) -> MonoTextStyle<'a, BinaryColor> {
     MonoTextStyleBuilder::new()
         .font(font)
-        .background_color(On)
-        .text_color(Off)
+        .background_color(ON)
+        .text_color(OFF)
         .build()
 }

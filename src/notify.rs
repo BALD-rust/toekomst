@@ -9,7 +9,7 @@ pub struct Notify<T = ()>(Signal<ThreadModeRawMutex, T>);
 ///
 /// Used to wake up other futures as a replacement for callbacks in traditional UI libraries.
 impl<T: Send> Notify<T> {
-    pub fn new() -> Self {
+    pub const fn new() -> Self {
         Self(Signal::new())
     }
 

@@ -12,6 +12,9 @@ use embedded_graphics::prelude::Size;
 
 use crate::key::Key;
 
+pub const ON: BinaryColor = BinaryColor::On;
+pub const OFF: BinaryColor = BinaryColor::Off;
+
 static mut DISP: MaybeUninit<Mutex<ThreadModeRawMutex, SimulatorDisplay<BinaryColor>>> =
     MaybeUninit::uninit();
 

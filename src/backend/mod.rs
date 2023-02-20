@@ -2,3 +2,5 @@
 pub mod mock;
 #[cfg(feature = "simulator")]
 pub mod simulator;
+#[cfg(feature = "sharp")]
+pub mod sharp;
