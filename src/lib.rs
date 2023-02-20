@@ -5,18 +5,18 @@
 #![allow(incomplete_features)]
 #![cfg_attr(not(feature = "simulator"), no_std)]
 
-use embedded_graphics::mono_font::iso_8859_1::{FONT_5X7, FONT_6X12};
 use embedded_graphics::mono_font::{MonoFont, MonoTextStyle, MonoTextStyleBuilder};
+use embedded_graphics::mono_font::iso_8859_1::{FONT_5X7, FONT_6X12};
 use embedded_graphics::pixelcolor::BinaryColor;
-use embedded_graphics::pixelcolor::BinaryColor::{Off, On};
 use embedded_graphics::primitives::PrimitiveStyle;
 
 #[cfg(not(any(feature = "simulator", feature = "sharp")))]
 pub use backend::mock as display;
-#[cfg(feature = "simulator")]
-pub use backend::simulator as display;
 #[cfg(feature = "sharp")]
 pub use backend::sharp as display;
+#[cfg(feature = "simulator")]
+pub use backend::simulator as display;
+
 use crate::display::{OFF, ON};
 
 pub mod button;
