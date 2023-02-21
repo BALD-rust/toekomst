@@ -5,8 +5,8 @@
 #![allow(incomplete_features)]
 #![cfg_attr(not(feature = "simulator"), no_std)]
 
-use embedded_graphics::mono_font::{MonoFont, MonoTextStyle, MonoTextStyleBuilder};
 use embedded_graphics::mono_font::iso_8859_1::{FONT_5X7, FONT_6X12};
+use embedded_graphics::mono_font::{MonoFont, MonoTextStyle, MonoTextStyleBuilder};
 use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::primitives::PrimitiveStyle;
 
@@ -35,7 +35,9 @@ pub fn thin_line() -> PrimitiveStyle<BinaryColor> {
     PrimitiveStyle::with_stroke(ON, 1)
 }
 
-pub fn thin_line_off() -> PrimitiveStyle<BinaryColor> { PrimitiveStyle::with_stroke(OFF, 1) }
+pub fn thin_line_off() -> PrimitiveStyle<BinaryColor> {
+    PrimitiveStyle::with_stroke(OFF, 1)
+}
 
 pub fn text<'a>(font: &'a MonoFont<'a>) -> MonoTextStyle<'a, BinaryColor> {
     MonoTextStyle::new(font, ON)
