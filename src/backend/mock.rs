@@ -9,6 +9,9 @@ use embedded_graphics::geometry::Size;
 use embedded_graphics::mock_display::MockDisplay;
 use embedded_graphics::pixelcolor::BinaryColor;
 
+pub const ON: BinaryColor = BinaryColor::On;
+pub const OFF: BinaryColor = BinaryColor::Off;
+
 static mut DISP: LazyCell<Mutex<ThreadModeRawMutex, MockDisplay<BinaryColor>>> =
     LazyCell::new(|| {
         let mut display = MockDisplay::new();
