@@ -3,11 +3,11 @@ use core::future::IntoFuture;
 use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::signal::Signal;
 
-pub struct Notify<T = ()>(Signal<ThreadModeRawMutex, T>);
-
 /// Synchronization primitive for communication between futures.
 ///
 /// Used to wake up other futures as a replacement for callbacks in traditional UI libraries.
+pub struct Notify<T = ()>(Signal<ThreadModeRawMutex, T>);
+
 impl<T: Send> Notify<T> {
     pub const fn new() -> Self {
         Self(Signal::new())
