@@ -6,19 +6,19 @@ use strum_macros::IntoStaticStr;
 const KEY_LEN: usize = core::mem::variant_count::<Key>();
 static KEYS: [Signal<CriticalSectionRawMutex, ()>; KEY_LEN] = [const { Signal::new() }; KEY_LEN];
 
-unsafe fn get_sig(k: Key) -> &'static Signal<CriticalSectionRawMutex, ()> {
-    KEYS.get_unchecked(k as usize)
+fn get_sig(k: Key) -> &'static Signal<CriticalSectionRawMutex, ()> {
+    unsafe { KEYS.get_unchecked(k as usize) }
 }
 
 pub fn wait(k: Key) -> impl Future<Output = ()> + 'static {
-    let sig = unsafe { get_sig(k) };
+    let sig = get_sig(k);
     sig.reset();
 
     sig.wait()
 }
 
 pub fn press_key(k: Key) {
-    unsafe { get_sig(k) }.signal(())
+    get_sig(k).signal(())
 }
 
 #[derive(Copy, Clone, Debug)]
