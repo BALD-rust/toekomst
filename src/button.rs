@@ -1,16 +1,14 @@
 use embedded_graphics::prelude::{Point, Size};
-use embedded_graphics::primitives::{Rectangle, StyledDrawable};
-use embedded_graphics::text::Text;
-use embedded_graphics::Drawable;
 
+use crate::common::{draw_accelerator, draw_thin_rect, pt, ANNOTATION_WIDTH};
 use crate::display::disp;
 use crate::key::{wait, Accel, Key};
+use crate::label::label_once_on;
 use crate::notify::Notify;
 use crate::widget::{Space, Widget};
-use crate::{text, text_inverted, thin_line};
 pub use crate::{FONT, SMALL_FONT};
 
-const SPACING: u32 = 3;
+const SPACING: i32 = 3;
 
 pub struct Button<'s, 'n, T> {
     text: &'s str,
@@ -30,29 +28,12 @@ impl<'s, 'n, T: Send + Clone> Widget for Button<'s, 'n, T> {
     async fn render(&self) {
         {
             let dt = &mut *disp().await;
-            // Draw bounding rect
-            let _ =
-                Rectangle::new(self.space.position, self.space.size).draw_styled(&thin_line(), dt);
 
-            // Draw accelerator
-            let _ = Text::new(
-                self.key.into(),
-                self.space.position + Point::new(1, SMALL_FONT.baseline as i32 + 1),
-                text_inverted(SMALL_FONT),
-            )
-            .draw(dt);
+            let tl = self.space.position;
+            let _ = draw_thin_rect(self.space, dt);
+            let _ = draw_accelerator(tl, self.key, dt);
 
-            // Draw button label
-            let _ = Text::new(
-                self.text,
-                self.space.position
-                    + Point::new(
-                        SPACING as i32 * 2 + SMALL_FONT.character_size.width as i32,
-                        SPACING as i32 + FONT.baseline as i32,
-                    ),
-                text(FONT),
-            )
-            .draw(dt);
+            label_once_on(self.text, tl + pt(ANNOTATION_WIDTH + SPACING, SPACING), dt);
         }
 
         loop {
@@ -72,8 +53,8 @@ impl<'s, 'n, T> Button<'s, 'n, T> {
         value: T,
     ) -> (Self, Accel) {
         let size = Size::new(
-            SPACING * 3 + FONT.character_size.width * (text.len() as u32 + 1),
-            SPACING * 2 + FONT.character_size.height,
+            SPACING as u32 * 2 + FONT.character_size.width * (text.len() as u32 + 1),
+            SPACING as u32 * 2 + FONT.character_size.height,
         );
         let (key, g) = a.next();
 

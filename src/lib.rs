@@ -20,6 +20,7 @@ pub use backend::simulator as display;
 use crate::display::{OFF, ON};
 
 pub mod button;
+pub mod common;
 pub mod key;
 pub mod label;
 pub mod layout;
