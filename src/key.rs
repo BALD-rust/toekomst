@@ -1,10 +1,12 @@
 use core::future::Future;
+use crossbeam_queue::SegQueue;
 use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
 use embassy_sync::signal::Signal;
 use strum_macros::IntoStaticStr;
 
 const KEY_LEN: usize = core::mem::variant_count::<Key>();
-static KEYS: [Signal<CriticalSectionRawMutex, ()>; KEY_LEN] = [const { Signal::new() }; KEY_LEN];
+static KEY_QUEUE: SegQueue<Key> = SegQueue::new();
+// static KEYS: [Signal<CriticalSectionRawMutex, ()>; KEY_LEN] = [const { Signal::new() }; KEY_LEN];
 
 fn get_sig(k: Key) -> &'static Signal<CriticalSectionRawMutex, ()> {
     unsafe { KEYS.get_unchecked(k as usize) }

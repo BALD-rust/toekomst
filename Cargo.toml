@@ -22,6 +22,8 @@ heapless = "0.7"
 strum_macros = "0.24.3"
 log = "0.4.17"
 
+crossbeam-queue = "0.3.8"
+
 [dev-dependencies]
 env_logger = "0.10.0"
 

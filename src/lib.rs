@@ -21,6 +21,7 @@ use crate::display::{OFF, ON};
 
 pub mod button;
 pub mod common;
+pub mod input;
 pub mod key;
 pub mod label;
 pub mod layout;
@@ -28,6 +29,8 @@ pub mod notify;
 pub mod widget;
 
 mod backend;
+
+extern crate alloc;
 
 pub const SMALL_FONT: &MonoFont = &FONT_5X7;
 pub const FONT: &MonoFont = &FONT_6X12;
