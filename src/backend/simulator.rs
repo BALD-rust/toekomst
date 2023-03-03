@@ -11,6 +11,7 @@ use embassy_futures::yield_now;
 use embedded_graphics::prelude::Size;
 
 use crate::key::Key;
+use crate::{should_redraw, unrequest_redraw};
 
 pub const ON: BinaryColor = BinaryColor::On;
 pub const OFF: BinaryColor = BinaryColor::Off;
@@ -37,9 +38,9 @@ pub async fn run_disp() {
         .build();
 
     let mut window = Window::new("toekomst", &settings);
+    window.update(&*disp().await);
 
     'inf: loop {
-        window.update(&*disp().await);
         for e in window.events() {
             match e {
                 SimulatorEvent::KeyDown { keycode, .. } => {
@@ -62,5 +63,10 @@ pub async fn run_disp() {
         }
 
         yield_now().await;
+
+        if should_redraw() {
+            unrequest_redraw();
+            window.update(&*disp().await);
+        }
     }
 }

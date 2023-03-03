@@ -5,8 +5,10 @@
 #![allow(incomplete_features)]
 #![cfg_attr(not(feature = "simulator"), no_std)]
 
-use embedded_graphics::mono_font::iso_8859_1::{FONT_5X7, FONT_6X12};
+use std::sync::atomic::{AtomicBool, Ordering};
+
 use embedded_graphics::mono_font::{MonoFont, MonoTextStyle, MonoTextStyleBuilder};
+use embedded_graphics::mono_font::iso_8859_1::{FONT_5X7, FONT_6X12};
 use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::primitives::PrimitiveStyle;
 
@@ -31,6 +33,19 @@ mod backend;
 
 pub const SMALL_FONT: &MonoFont = &FONT_5X7;
 pub const FONT: &MonoFont = &FONT_6X12;
+static REDRAW: AtomicBool = AtomicBool::new(true);
+
+pub fn request_redraw() {
+    REDRAW.store(true, Ordering::Relaxed);
+}
+
+pub fn unrequest_redraw() {
+    REDRAW.store(false, Ordering::Relaxed);
+}
+
+pub fn should_redraw() -> bool {
+    REDRAW.load(Ordering::Relaxed)
+}
 
 pub fn thin_line() -> PrimitiveStyle<BinaryColor> {
     PrimitiveStyle::with_stroke(ON, 1)

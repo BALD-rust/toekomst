@@ -8,7 +8,7 @@ use embedded_graphics::Drawable;
 
 use crate::display::disp;
 use crate::notify::Notify;
-use crate::text;
+use crate::{request_redraw, text};
 use crate::widget::{clean_space_on, Space};
 pub use crate::FONT;
 
@@ -23,6 +23,7 @@ pub async fn label_with<S: AsRef<str> + Send>(notif: &Notify<S>, p: Point) -> ! 
     let s = notif.wait().await;
     let s = s.as_ref();
     label_once(s, p).await;
+    request_redraw();
 
     let mut space = Space::new(
         p,
@@ -47,6 +48,7 @@ pub async fn label_with<S: AsRef<str> + Send>(notif: &Notify<S>, p: Point) -> ! 
             ),
         );
         label_once_on(s, p, dt);
+        request_redraw();
     }
 }
 

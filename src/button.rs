@@ -7,6 +7,7 @@ use crate::label::label_once_on;
 use crate::notify::Notify;
 use crate::widget::{Space, Widget};
 pub use crate::{FONT, SMALL_FONT};
+use crate::request_redraw;
 
 const SPACING: i32 = 3;
 
@@ -35,6 +36,8 @@ impl<'s, 'n, T: Send + Clone> Widget for Button<'s, 'n, T> {
 
             label_once_on(self.text, tl + pt(ANNOTATION_WIDTH + SPACING, SPACING), dt);
         }
+
+        request_redraw();
 
         loop {
             wait(self.key).await;
