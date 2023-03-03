@@ -1,24 +1,32 @@
-use core::future::Future;
-use embassy_sync::blocking_mutex::raw::CriticalSectionRawMutex;
+use std::sync::atomic::{AtomicBool, Ordering};
+
+use announcement::Announcement;
+use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::signal::Signal;
 use strum_macros::IntoStaticStr;
 
-const KEY_LEN: usize = core::mem::variant_count::<Key>();
-static KEYS: [Signal<CriticalSectionRawMutex, ()>; KEY_LEN] = [const { Signal::new() }; KEY_LEN];
+static KEY_CHAN: Announcement<Key> = Announcement::new();
+static INHIBITING: AtomicBool = AtomicBool::new(false);
+static INHIBITOR: Signal<ThreadModeRawMutex, Key> = Signal::new();
 
-fn get_sig(k: Key) -> &'static Signal<CriticalSectionRawMutex, ()> {
-    unsafe { KEYS.get_unchecked(k as usize) }
+pub async fn wait(k: Key) {
+    while KEY_CHAN.recv().await != k {}
 }
 
-pub fn wait(k: Key) -> impl Future<Output = ()> + 'static {
-    let sig = get_sig(k);
-    sig.reset();
+pub async fn wait_inhibiting() -> Key {
+    INHIBITING.store(true, Ordering::Relaxed);
+    let key = INHIBITOR.wait().await;
+    INHIBITING.store(false, Ordering::Relaxed);
 
-    sig.wait()
+    key
 }
 
 pub fn press_key(k: Key) {
-    get_sig(k).signal(())
+    if INHIBITING.load(Ordering::Relaxed) {
+        INHIBITOR.signal(k)
+    } else {
+        KEY_CHAN.announce(k)
+    }
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -31,6 +39,8 @@ impl Accel {
 
     pub fn next(self) -> (Key, Accel) {
         let Accel(key) = self;
+
+        const KEY_LEN: usize = core::mem::variant_count::<Key>();
 
         // assert we haven't ran out of keys
         debug_assert_ne!(key as u8, KEY_LEN as u8 - 1);
@@ -45,7 +55,7 @@ impl From<Key> for Accel {
     }
 }
 
-#[derive(Copy, Clone, Debug, IntoStaticStr)]
+#[derive(Copy, Clone, Debug, PartialEq, IntoStaticStr)]
 #[repr(u8)]
 #[allow(non_camel_case_types)]
 #[allow(unused)]
