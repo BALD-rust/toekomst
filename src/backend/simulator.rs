@@ -44,7 +44,7 @@ pub async fn run_disp() {
         for e in window.events() {
             match e {
                 SimulatorEvent::KeyDown { keycode, .. } => {
-                    let k = match keycode {
+                    let key = match keycode {
                         Keycode::A => Key::a,
                         Keycode::B => Key::b,
                         Keycode::C => Key::c,
@@ -52,10 +52,33 @@ pub async fn run_disp() {
                         Keycode::E => Key::e,
                         Keycode::F => Key::f,
                         Keycode::G => Key::g,
+                        Keycode::H => Key::h,
+                        Keycode::I => Key::i,
+                        Keycode::J => Key::j,
+                        Keycode::K => Key::k,
+                        Keycode::L => Key::l,
+                        Keycode::M => Key::m,
+                        Keycode::N => Key::n,
+                        Keycode::O => Key::o,
+                        Keycode::P => Key::p,
+                        Keycode::Q => Key::q,
+                        Keycode::R => Key::r,
+                        Keycode::S => Key::s,
+                        Keycode::T => Key::t,
+                        Keycode::U => Key::u,
+                        Keycode::V => Key::v,
+                        Keycode::W => Key::w,
+                        Keycode::X => Key::x,
+                        Keycode::Y => Key::y,
+                        Keycode::Z => Key::z,
+                        Keycode::Space => Key::space,
+                        Keycode::Escape => Key::esc,
+                        Keycode::Return => Key::confirm,
+                        Keycode::Backspace => Key::backspace,
                         _ => continue,
                     };
 
-                    crate::key::press_key(k);
+                    crate::key::press_key(key);
                 }
                 SimulatorEvent::Quit => break 'inf,
                 _ => {}

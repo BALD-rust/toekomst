@@ -9,8 +9,8 @@ static KEY_CHAN: Announcement<Key> = Announcement::new();
 static INHIBITING: AtomicBool = AtomicBool::new(false);
 static INHIBITOR: Signal<ThreadModeRawMutex, Key> = Signal::new();
 
-pub async fn wait(k: Key) {
-    while KEY_CHAN.recv().await != k {}
+pub async fn wait(key: Key) {
+    while KEY_CHAN.recv().await != key {}
 }
 
 pub async fn wait_inhibiting() -> Key {
@@ -21,11 +21,11 @@ pub async fn wait_inhibiting() -> Key {
     key
 }
 
-pub fn press_key(k: Key) {
+pub fn press_key(key: Key) {
     if INHIBITING.load(Ordering::Relaxed) {
-        INHIBITOR.signal(k)
+        INHIBITOR.signal(key)
     } else {
-        KEY_CHAN.announce(k)
+        KEY_CHAN.announce(key)
     }
 }
 
@@ -67,6 +67,29 @@ pub enum Key {
     e,
     f,
     g,
+    h,
+    i,
+    j,
+    k,
+    l,
+    m,
+    n,
+    o,
+    p,
+    q,
+    r,
+    s,
+    t,
+    u,
+    v,
+    w,
+    x,
+    y,
+    z,
+    space,
+    esc,
+    confirm,
+    backspace,
 }
 
 impl Key {
