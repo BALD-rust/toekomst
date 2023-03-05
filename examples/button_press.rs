@@ -14,6 +14,7 @@ use toekomst::display::disp;
 use toekomst::key::Accel;
 use toekomst::label::label_once_on;
 use toekomst::notify::Notify;
+use toekomst::request_redraw;
 use toekomst::widget::{clean_space_on, Widget};
 
 async fn ui() {
@@ -34,6 +35,7 @@ async fn ui() {
         let dt = &mut *disp().await;
         clean_space_on(btn.space(), dt);
         label_once_on("Button pressed!", btn.position(), dt);
+        request_redraw();
     }
 
     poll_fn(|_| Poll::Pending).await
