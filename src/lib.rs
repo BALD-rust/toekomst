@@ -28,6 +28,7 @@ pub mod label;
 pub mod layout;
 pub mod notify;
 pub mod widget;
+pub mod input;
 
 mod backend;
 
@@ -65,4 +66,8 @@ pub fn text_inverted<'a>(font: &'a MonoFont<'a>) -> MonoTextStyle<'a, BinaryColo
         .background_color(ON)
         .text_color(OFF)
         .build()
+}
+
+pub const fn character_stride<'a>(font: &'a MonoFont<'a>) -> u32 {
+    font.character_size.width + font.character_spacing
 }
