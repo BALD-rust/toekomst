@@ -5,23 +5,25 @@ use embassy_sync::blocking_mutex::raw::ThreadModeRawMutex;
 use embassy_sync::signal::Signal;
 use strum_macros::IntoStaticStr;
 
-static KEY_CHAN: Announcement<Key> = Announcement::new();
+static KEY_CHAN: Announcement<u8> = Announcement::new();
 static INHIBITING: AtomicBool = AtomicBool::new(false);
-static INHIBITOR: Signal<ThreadModeRawMutex, Key> = Signal::new();
+static INHIBITOR: Signal<ThreadModeRawMutex, u8> = Signal::new();
 
-pub async fn wait(key: Key) {
-    while KEY_CHAN.recv().await != key {}
+pub async fn wait<T: Into<u8>>(key: T) {
+    let c = key.into();
+    while KEY_CHAN.recv().await != c {}
 }
 
-pub async fn wait_inhibiting() -> Key {
+pub async fn wait_inhibiting<T: From<u8>>() -> T {
     INHIBITING.store(true, Ordering::Relaxed);
     let key = INHIBITOR.wait().await;
     INHIBITING.store(false, Ordering::Relaxed);
 
-    key
+    T::from(key)
 }
 
-pub fn press_key(key: Key) {
+pub fn press_key<T: Into<u8>>(key: T) {
+    let key = key.into();
     if INHIBITING.load(Ordering::Relaxed) {
         INHIBITOR.signal(key)
     } else {
@@ -90,6 +92,24 @@ pub enum Key {
     esc,
     confirm,
     backspace,
+    invalid
+}
+
+impl From<u8> for Key {
+    fn from(value: u8) -> Self {
+        const VARIANTS: u8 = core::mem::variant_count::<Key>() as u8;
+        if value >= VARIANTS {
+            Key::invalid
+        } else {
+            unsafe { Key::from_u8(value) }
+        }
+    }
+}
+
+impl Into<u8> for Key {
+    fn into(self) -> u8 {
+        self as u8
+    }
 }
 
 impl Key {
