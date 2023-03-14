@@ -32,27 +32,23 @@ pub fn press_key<T: Into<u8>>(key: T) {
 }
 
 #[derive(Copy, Clone, Debug)]
-pub struct Accel(Key);
+pub struct Accel(u8);
 
 impl Accel {
-    pub fn new() -> Self {
-        Accel(Key::a)
+    pub fn new<T>() -> Self
+    where T: Default + Into<u8> {
+        Accel(T::default().into())
     }
 
-    pub fn next(self) -> (Key, Accel) {
+    pub fn next<T: From<u8>>(self) -> (T, Accel) {
         let Accel(key) = self;
 
-        const KEY_LEN: usize = core::mem::variant_count::<Key>();
-
-        // assert we haven't ran out of keys
-        debug_assert_ne!(key as u8, KEY_LEN as u8 - 1);
-
-        unsafe { (key, Accel(Key::from_u8(key as u8 + 1))) }
+        (T::from(key), Accel(key + 1))
     }
 }
 
-impl From<Key> for Accel {
-    fn from(value: Key) -> Self {
+impl From<u8> for Accel {
+    fn from(value: u8) -> Self {
         Self(value)
     }
 }
@@ -92,7 +88,7 @@ pub enum Key {
     esc,
     confirm,
     backspace,
-    invalid
+    invalid,
 }
 
 impl From<u8> for Key {
@@ -109,6 +105,12 @@ impl From<u8> for Key {
 impl Into<u8> for Key {
     fn into(self) -> u8 {
         self as u8
+    }
+}
+
+impl Default for Key {
+    fn default() -> Self {
+        Key::a
     }
 }
 

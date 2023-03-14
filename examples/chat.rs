@@ -8,7 +8,7 @@ use embedded_graphics::prelude::Size;
 use env_logger::Env;
 
 use toekomst::input::Input;
-use toekomst::key::Accel;
+use toekomst::key::{Accel, Key};
 use toekomst::label;
 use toekomst::label::{label_once, label_with};
 use toekomst::layout::Vertical;
@@ -17,7 +17,7 @@ use toekomst::widget::Widget;
 
 async fn ui() {
     const C_WIDTH: u32 = label::FONT.character_size.width + label::FONT.character_spacing;
-    let ac = Accel::new();
+    let ac = Accel::new::<Key>();
     let mut v = Vertical::new(Point::new(10, 10), 10);
 
     let s = "Chatting as ";
