@@ -1,4 +1,5 @@
 use embedded_graphics::prelude::{Point, Size};
+use alloc::string::String;
 
 use crate::common::{draw_accelerator, draw_thin_rect};
 use crate::display::disp;
