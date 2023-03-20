@@ -5,10 +5,11 @@ use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::prelude::{DrawTarget, Point, Size};
 use embedded_graphics::text::Text;
 use embedded_graphics::Drawable;
+use embedded_graphics::mono_font::MonoFont;
 
 use crate::display::disp;
 use crate::notify::Notify;
-use crate::{request_redraw, text};
+use crate::{FONT_BOLD, request_redraw, text};
 use crate::widget::{clean_space_on, Space};
 pub use crate::FONT;
 
@@ -47,25 +48,30 @@ pub async fn label_with<S: AsRef<str> + Send>(notif: &Notify<S>, p: Point) -> ! 
                 SIZE.height,
             ),
         );
-        label_once_on(s, p, dt);
+        label_once_on(s, p, FONT, dt);
         request_redraw();
     }
 }
 
 #[inline]
 pub async fn label_once<S: AsRef<str>>(s: S, p: Point) {
-    label_once_on(s, p, &mut *disp().await)
+    label_once_on(s, p, FONT, &mut *disp().await)
 }
 
-pub fn label_once_on<S, D>(s: S, p: Point, dt: &mut D)
+#[inline]
+pub async fn label_once_bold<S: AsRef<str>>(s: S, p: Point) {
+    label_once_on(s, p, FONT_BOLD, &mut *disp().await)
+}
+
+pub fn label_once_on<S, D>(s: S, p: Point, font: &MonoFont, dt: &mut D)
 where
     S: AsRef<str>,
     D: DrawTarget<Color = BinaryColor>,
 {
     let _ = Text::new(
         s.as_ref(),
-        p + Point::new(0, FONT.baseline as i32),
-        text(FONT),
+        p + Point::new(0, font.baseline as i32),
+        text(font),
     )
     .draw(dt);
 }

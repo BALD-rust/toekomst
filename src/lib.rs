@@ -7,7 +7,7 @@
 
 use core::sync::atomic;
 use embedded_graphics::mono_font::{MonoFont, MonoTextStyle, MonoTextStyleBuilder};
-use embedded_graphics::mono_font::iso_8859_1::{FONT_5X7, FONT_6X12};
+use embedded_graphics::mono_font::iso_8859_1::{FONT_5X7, FONT_6X13, FONT_6X13_BOLD};
 use embedded_graphics::pixelcolor::BinaryColor;
 use embedded_graphics::primitives::PrimitiveStyle;
 
@@ -34,7 +34,8 @@ mod backend;
 extern crate alloc;
 
 pub const SMALL_FONT: &MonoFont = &FONT_5X7;
-pub const FONT: &MonoFont = &FONT_6X12;
+pub const FONT: &MonoFont = &FONT_6X13;
+pub const FONT_BOLD: &MonoFont = &FONT_6X13_BOLD;
 static REDRAW: atomic::AtomicBool = atomic::AtomicBool::new(true);
 
 pub fn request_redraw() {

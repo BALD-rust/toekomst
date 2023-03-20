@@ -34,7 +34,7 @@ impl<'s, 'n, T: Send + Clone> Widget for Button<'s, 'n, T> {
             let _ = draw_thin_rect(self.space, dt);
             let _ = draw_accelerator(tl, self.key, dt);
 
-            label_once_on(self.text, tl + pt(ANNOTATION_WIDTH + SPACING, SPACING), dt);
+            label_once_on(self.text, tl + pt(ANNOTATION_WIDTH + SPACING, SPACING), FONT, dt);
         }
 
         request_redraw();
