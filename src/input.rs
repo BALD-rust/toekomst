@@ -67,7 +67,7 @@ impl<const N: usize> Widget for Input<'_, N> {
                 let text_pos = self.space.position + Point::new(character_stride(FONT) as i32 * (index + 2) as i32, 0);
                 let s = match key {
                     Key::space => " ",
-                    k => k.into()
+                    other_key => other_key.into()
                 };
                 label_once(s, text_pos).await;
                 unsafe {
