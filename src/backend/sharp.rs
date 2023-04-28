@@ -12,6 +12,7 @@ use embassy_sync::signal::Signal;
 use embedded_graphics::geometry::Size;
 use embedded_graphics::pixelcolor::BinaryColor;
 use sharp_memory_display::MemoryDisplay;
+use log::info;
 
 pub const ON: BinaryColor = BinaryColor::Off;
 pub const OFF: BinaryColor = BinaryColor::On;
