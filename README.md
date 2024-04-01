@@ -1,7 +1,7 @@
 # toekomst
 
 User interface library for low-power embedded devices driven by futures.
-Assumes a binary coloured display.
+Assumes a binary coloured display without touchscreen: interaction is done by 'accelerators', triggered by keyboard presses.
 Designed as part of a bachelor's thesis at the KU Leuven.
 
 Most of toekomst's primitives are decently documented, and examples can be found in the `examples` subdirectory.
